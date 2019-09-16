@@ -18,8 +18,9 @@ server.get('/', (req, res) => {
 
 server.post('/api/register', (req, res) => {
   let user = req.body;
+  const hash = bcrypt.hashSync(user.password, 12)
 
-  Users.add(user)
+  Users.add(user, user.password = hash)
     .then(saved => {
       res.status(201).json(saved);
     })
