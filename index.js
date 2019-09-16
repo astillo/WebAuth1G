@@ -4,7 +4,8 @@ const cors = require('cors');
 
 const db = require('./database/dbConfig.js');
 const Users = require('./users/users-model.js');
-
+const bcrypt = require('bcrypt')
+const saltRounds = 10;
 const server = express();
 
 server.use(helmet());
@@ -51,6 +52,19 @@ server.get('/api/users', (req, res) => {
     })
     .catch(err => res.send(err));
 });
+
+server.get('/hash', (req, res) => {
+  const name = req.query.name
+  let Hash = ''
+  bcrypt.genSalt(saltRounds, function (err, salt) {
+    bcrypt.hash(name, salt, function (err, hash) {
+      Hash === hash
+      console.log(name, Hash)
+    })
+  })
+  // hash the name
+  res.send(`the hash for ${name} ${Hash}`)
+})
 
 const port = process.env.PORT || 5000;
 server.listen(port, () => console.log(`\n** Running on port ${port} **\n`));
